@@ -35,7 +35,7 @@ bool Game::init()
 	bg->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
 	this->addChild(bg);
 
-	//ÉèÖÃ·ÖÊý
+	//è®¾ç½®åˆ†æ•°
 	auto Label = Label::createWithSystemFont("Score:", "Arial", 35);
 	Label->setPosition(Vec2(70, 700));
 	score_label = Label::createWithSystemFont("0", "Arial", 35);
@@ -43,20 +43,20 @@ bool Game::init()
 	this->addChild(Label);
 	this->addChild(score_label);
 
-	//Íæ¼Ò·É»ú
+	//çŽ©å®¶é£žæœº
 	plane = Sprite::create("heroplane.png");
 	plane->setTag(1);
 	plane->setScale(5.0);
 	plane->setPosition(Vec2(240, 100));
 	this->addChild(plane,3);
 
-	//Ê±¼ä±í·½·¨
+	//æ—¶é—´è¡¨æ–¹æ³•
 	this->scheduleUpdate();
 	this->schedule(schedule_selector(Game::new_bullet), 0.5);
 	this->schedule(schedule_selector(Game::new_small_enemy), 1);
 
 
-	//´¥ÃþÊÂ¼þ
+	//è§¦æ‘¸äº‹ä»¶
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->onTouchBegan = CC_CALLBACK_2(Game::onTouchBegan, this);
 	listener->onTouchMoved = CC_CALLBACK_2(Game::onTouchMoved, this);
@@ -89,7 +89,7 @@ void Game::onTouchEnded(Touch *touch, Event *unused_event)
 {
 	return;
 }
-void Game::new_bullet(float dt)	//Éú³É×Óµ¯
+void Game::new_bullet(float dt)	//ç”Ÿæˆå­å¼¹
 {
 	auto hero = this->getChildByTag(1);
 	auto bullet = Sprite::create("bullet1.png");
@@ -115,7 +115,7 @@ void Game::new_small_enemy(float dt)
 void Game::update(float dt)
 {
 	int flag = 1;
-	//ÅÐ¶Ï×Óµ¯ÓëµÐ»ú
+	//åˆ¤æ–­å­å¼¹ä¸Žæ•Œæœº
 	for (auto bullet = bullets.begin(); bullet != bullets.end(); )
 	{
 		for (auto enemy = small_enemys.begin(); enemy != small_enemys.end(); )
@@ -141,7 +141,7 @@ void Game::update(float dt)
 		}
 		bullet++;
 	}
-	//×Óµ¯³¬³ö±ß½ç
+	//å­å¼¹è¶…å‡ºè¾¹ç•Œ
 	for (auto bullet = bullets.begin(); bullet != bullets.end(); )
 	{
 		if ((*bullet)->getPositionY() >= 800)
@@ -156,7 +156,7 @@ void Game::update(float dt)
 			bullet++;
 		}
 	}
-	//µÐ»ú³¬³ö±ß½ç
+	//æ•Œæœºè¶…å‡ºè¾¹ç•Œ
 	for (auto enemy = small_enemys.begin(); enemy != small_enemys.end(); )
 	{
 		if ((*enemy)->getPositionY() <= 0)
@@ -171,7 +171,7 @@ void Game::update(float dt)
 			enemy++;
 		}
 	}
-	//ÅÐ¶ÏÊÇ·ñËÀÍö
+	//åˆ¤æ–­æ˜¯å¦æ­»äº¡
 	for (auto enemy = small_enemys.begin(); enemy != small_enemys.end();)
 	{
 		if ((*enemy)->boundingBox().intersectsRect(plane->boundingBox()))

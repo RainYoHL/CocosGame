@@ -187,10 +187,10 @@ void GameServer::start()
     this->mSocket = new ODSocket();
     this->mSocket->Init();
     this->mSocket->Create(AF_INET, SOCK_STREAM , 0);
-    this->mSocket->Bind(this->port);
+    this->mSocket->Bind(8000);
     log("开启的IP:%s,port:%d",this->ip,this->port);
     if (!(this->mSocket->Listen(6)))
-    {
+    {  
         log("监听端口失败");
     }
     //log("开始监听端口");
@@ -199,7 +199,7 @@ void GameServer::start()
     {
         log("当前监听端口为：%d",this->port);
         ODSocket* clientSocket = new ODSocket;
-        if (mSocket->Accept(*clientSocket,this->ip))
+        if (mSocket->Accept(*clientSocket,"127.0.0.1"))
         {
             for (int i = 0 ; i < 6 ; i++)
             {

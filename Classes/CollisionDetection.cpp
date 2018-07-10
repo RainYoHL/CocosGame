@@ -32,6 +32,8 @@ void CollisionDetection::update(float dt)
     
     //玩家子弹触墙判断
 	int flag = 0;
+    int playerIndex = 0;
+    int bulletIndex = 0;
     for(auto player : playerTankManager->returnPlayerTankManager())
     {
         for(auto bullet : player->returnBulletManager()->playerBullet)
@@ -42,15 +44,25 @@ void CollisionDetection::update(float dt)
                 player->returnBulletManager()->playerBullet.eraseObject(bullet);
                 player->returnBulletManager()->BulletNum -= 1;
 				flag = 1;
+                //发送玩家ID
+                sendPosMsg = Value(playerIndex).asString()+"9"+"delEnemyBullet"+","+"-1"+","+"-1"+"0"+"\n";
+                NotificationCenter::getInstance()->postNotification("sendOldPlayerPos",(Ref*)((char*)sendPosMsg.data()));
+                //发送子弹ID
+                sendPosMsg = Value(bulletIndex).asString()+"9"+"delPlayerBullet"+","+"-1"+","+"-1"+"0"+"\n";
+                NotificationCenter::getInstance()->postNotification("sendOldPlayerPos",(Ref*)((char*)sendPosMsg.data()));
 				break;
             }
+            bulletIndex++;
         }
 		if (flag)
 			break;
+        playerIndex++;
     }
 
     //敌方子弹触墙判断
 	flag = 0;
+    int enemyIndex = 0;
+    bulletIndex = 0;
     for(auto enemy : enemyTankManager->enemyTankArr)
     {
         for(auto bullet : enemy->returnBulletManager()->playerBullet)
@@ -61,12 +73,21 @@ void CollisionDetection::update(float dt)
                 enemy->returnBulletManager()->playerBullet.eraseObject(bullet);
                 enemy->returnBulletManager()->BulletNum -= 1;
 				flag = 1;
+                //发送敌人ID
+                sendPosMsg = Value(enemyIndex).asString()+"9"+"delEnemyBullet"+","+"-1"+","+"-1"+"0"+"\n";
+                NotificationCenter::getInstance()->postNotification("sendOldPlayerPos",(Ref*)((char*)sendPosMsg.data()));
+                //发送子弹ID
+                sendPosMsg = Value(bulletIndex).asString()+"9"+"delPlayerBullet"+","+"-1"+","+"-1"+"0"+"\n";
+                NotificationCenter::getInstance()->postNotification("sendOldPlayerPos",(Ref*)((char*)sendPosMsg.data()));
 				break;
             }
+            bulletIndex++;
         }
 		if (flag)
 			break;
+        enemyIndex++;
     }
+    
 
     int playerIndex = 0;
 
@@ -106,6 +127,7 @@ void CollisionDetection::update(float dt)
 
                     sendPosMsg = Value(playerIndex).asString()+"9"+"delPlayerBullet"+","+"-1"+","+"-1"+"0"+"\n";
                     NotificationCenter::getInstance()->postNotification("sendOldPlayerPos",(Ref*)((char*)sendPosMsg.data()));
+
                     for (auto enemybullet : *(enemy->returnBulletManager()->returnPlayerBullet()))
                     {
                         enemybullet->removeFromParent();
@@ -124,6 +146,8 @@ void CollisionDetection::update(float dt)
 
     //子弹与玩家碰撞判断
 	flag = 0;
+    int enemyIndex = 0 ;
+    bulletIndex = 0;
     for(auto enemy : enemyTankManager->enemyTankArr)
     {
         for(auto bullet : enemy->returnBulletManager()->playerBullet)
@@ -139,14 +163,23 @@ void CollisionDetection::update(float dt)
                     enemy->returnBulletManager()->BulletNum -= 1;
 					flag = 1;
                     log("Game Over");
+
+                    //发送敌人ID
+                    sendPosMsg = Value(enemyIndex).asString()+"9"+"delEnemyBullet"+","+"-1"+","+"-1"+"0"+"\n";
+                    NotificationCenter::getInstance()->postNotification("sendOldPlayerPos",(Ref*)((char*)sendPosMsg.data()));
+                    //发送子弹ID
+                    sendPosMsg = Value(bulletIndex).asString()+"9"+"delPlayerBullet"+","+"-1"+","+"-1"+"0"+"\n";
+                    NotificationCenter::getInstance()->postNotification("sendOldPlayerPos",(Ref*)((char*)sendPosMsg.data()));
 					break;
                 }
             }
 			if (flag)
 				break;
+            bulletIndex++;
         }
 		if (flag)
 			break;
+        enemyIndex++;
     }
 }
 
