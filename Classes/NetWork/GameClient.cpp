@@ -5,13 +5,9 @@
 GameClient::GameClient()
 {
     resetClient();
-    this->mSocket = new ODSocket;
+    this->mSocket = new ODSocket();
     this->mSocket->Init();
     this->mSocket->Create(AF_INET, SOCK_STREAM , 0);
-	//测试代码
-    bool result = this->mSocket->Connect("127.0.0.1",8000);
-	if (result)
-		log("Success Connect");
 
     NotificationCenter::getInstance()->addObserver(
         this,
@@ -19,32 +15,11 @@ GameClient::GameClient()
         "sendMsg",
         NULL);
     
-}
+	//测试绑定端口
+	this->port = 8000;
+	strcmp(this->ip, "127.0.0.1");
+    bool result = this->mSocket->Connect(this->ip,this->port);
 
-GameClient::~GameClient()
-{
-    delete this->mSocket;
-}
-
-bool GameClient::init()
-{
-    return true;
-}
-
-void GameClient::resetClient()
-{
-    this->port = 8000;
-    strcpy(ip,"127.0.0.1");
-}
-
-void GameClient::connectServer()
-{
-    log("%s",this->ip);
-    log("%d",this->port);
-    //bool result = this->mSocket->Connect(this->ip,this->port);
-	//测试代码
-	bool result = true;
-	//测试代码
     int retryTimes = 0;
     if (result == true)
     {
@@ -68,6 +43,29 @@ void GameClient::connectServer()
     }
     std::thread recvMsg = std::thread(&GameClient::recvMsg,this);
     recvMsg.detach();
+
+}
+
+GameClient::~GameClient()
+{
+    delete this->mSocket;
+}
+
+bool GameClient::init()
+{
+    return true;
+}
+
+void GameClient::resetClient()
+{
+    this->port = 8000;
+    strcpy(ip,"127.0.0.1");
+}
+
+void GameClient::connectServer()
+{
+    log("%s",this->ip);
+    log("%d",this->port);
 }
 
 void GameClient::setClient(char* ip , int port)
@@ -92,7 +90,7 @@ void GameClient::recvMsg()
             break;
         }
         //开始处理数据
-        log("%s",recvData);
+        //log("%s",recvData);
         char* Info = recvData;
         char cmd[101];
         char strPosX[101];
@@ -179,11 +177,8 @@ void GameClient::recvMsg()
             {
                 if (index == roleIndex)
                 {
-                    if (posX != player->getPositionX() || posY != player->getPositionY())
-                    {
-                        player->setPosition(Vec2(posX,posY));
-                        player->setRotation(rotation);
-                    }
+					player->setPosition(Vec2(posX,posY));
+					player->setRotation(rotation);
                     break;
                 }
                 index++;
@@ -275,7 +270,6 @@ void GameClient::recvMsg()
                 bulletIndexTemp++;
             }
         }
-        
         //log("%s",recvData);
         //将接受到的字符串发送出去处理
         //NotificationCenter::getInstance()->postNotification("sendContent",(Ref*)recvData);

@@ -168,7 +168,7 @@ void GameServer::sendOldPlayer(Ref* pdata)
             max_size[2] = '\0';
             client->connectSocket->Send(max_size,3);
             client->connectSocket->Send(sendMsg,strlen(sendMsg));
-            client->connectSocket->Clean();
+            //client->connectSocket->Clean();
         }
         i++;
     }
@@ -188,7 +188,7 @@ void GameServer::start()
     this->mSocket->Init();
     this->mSocket->Create(AF_INET, SOCK_STREAM , 0);
     this->mSocket->Bind(this->port);
-    log("开启的IP为 %s , %d",this->ip,this->port);
+    log("开启的IP:%s,port:%d",this->ip,this->port);
     if (!(this->mSocket->Listen(6)))
     {
         log("监听端口失败");
